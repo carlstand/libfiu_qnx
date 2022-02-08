@@ -1,11 +1,11 @@
-#!/bin/ksh
+#!/usr/bin/env bash
 # Lists processes that can be controlled with fiu-ctrl.
 
 # default remote control over named pipes prefix; we use the same one as
 # fiu-run so it's easier to use
 FIFO_PREFIX="${TMPDIR:-/tmp}/fiu-ctrl"
 
-set -A PIDS
+declare -a PIDS
 
 HELP_MSG="
 Usage: fiu-ls [options]

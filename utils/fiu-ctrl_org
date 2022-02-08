@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/usr/bin/env bash
 
 # This scripts present a friendly interface to the fiu remote control
 # capabilities. Currently, it supports only the named pipe method (the only
@@ -10,7 +10,8 @@ FIFO_PREFIX="${TMPDIR:-/tmp}/fiu-ctrl"
 
 # commands to send, will be filled by options processing; must be in the
 # format supported by the fiu remote control (see fiu-rc.c for more details)
-set -A CMDS
+declare -a CMDS
+
 
 HELP_MSG="
 Usage: fiu-ctrl [options] PID [PID ...]
@@ -57,16 +58,17 @@ You can control multiple processes at once by specifiying more than one
 process ID.
 "
 
+
 #
 # Parse the options
 #
 
-if(($# < 1)) then
-    echo "$HELP_MSG"
-	    exit 1
+if [ $# -lt 1 ]; then
+	echo "$HELP_MSG"
+	exit 1
 fi
 
-opts_reset() {
+function opts_reset() {
 	# variables to store what we know so far; after a new name is found
 	# the old one is added to $CMD
 	DEP_NAME=""
@@ -75,13 +77,13 @@ opts_reset() {
 	DEP_FAILINFO=0
 }
 
-add_deprecated_enable() {
-	if (("$DEP_NAME" == "")) then
+function add_deprecated_enable() {
+	if [ "$DEP_NAME" == "" ]; then
 		return
 	fi;
 
 	PARAMS="name=$DEP_NAME,failnum=$DEP_FAILNUM,failinfo=$DEP_FAILINFO"
-	if (("$DEP_PROB" >= 0)) then
+	if [ "$DEP_PROB" -ge 0 ]; then
 		C="enable_random $PARAMS,probability=0.$DEP_PROB"
 	else
 		C="enable $PARAMS"
@@ -90,7 +92,7 @@ add_deprecated_enable() {
 	CMDS[${#CMDS[*]}]="$C"
 }
 
-deprecated_warning() {
+function deprecated_warning() {
 	echo "Warning: this option is deprecated and will be removed." >&2
 }
 
@@ -135,7 +137,7 @@ while getopts "+c:e:p:u:i:d:f:h" opt; do
 done
 
 # add leftovers
-if (( -n $DEP_NAME )) then
+if [ "$DEP_NAME" != "" ]; then
 	add_deprecated_enable;
 fi
 
@@ -161,7 +163,7 @@ done
 # Send the commands
 #
 
-send_cmd_fifo() {
+function send_cmd_fifo() {
 	# $1 = complete fifo prefix
 	# $2+ = command to send
 	# echoes the reply
@@ -183,3 +185,4 @@ for c in "${CMDS[@]}"; do
 		send_cmd_fifo $i "$c"
 	done
 done
+

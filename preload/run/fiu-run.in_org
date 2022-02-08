@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/usr/bin/env bash
 
 # This script aims to make the use of the fiu_run_preload library a little
 # easier by providing a more friendly user interface, and abstracting the
@@ -73,7 +73,7 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
-opts_reset() {
+function opts_reset() {
 	# variables to store what we know so far; after a new name is found
 	# the old one is added to $ENABLE
 	DEP_NAME=""
@@ -82,13 +82,13 @@ opts_reset() {
 	DEP_FAILINFO=0
 }
 
-add_deprecated_enable() {
+function add_deprecated_enable() {
 	if [ "$NAME" == "" ]; then
 		return
 	fi;
 
 	PARAMS="name=$DEP_NAME,failnum=$DEP_FAILNUM,failinfo=$DEP_FAILINFO"
-	if [ $PROB >= 0 ]; then
+	if [ $PROB -ge 0 ]; then
 		C="enable_random $PARAMS,probability=$PROB"
 	else
 		C="enable $PARAMS"
@@ -151,7 +151,7 @@ shift $(( $OPTIND - 1 ))
 
 # Allow user to give -l and -x in any order.
 if [ $USE_POSIX_PRELOAD -eq 1 ] ; then
-	PRELOAD_LIBS="$PRELOAD_LIBS:$PLIBPATH/fiu_posix_preload.so"
+	PRELOAD_LIBS="$PRELOAD_LIBS $PLIBPATH/fiu_posix_preload.so"
 fi
 
 #
@@ -160,12 +160,12 @@ fi
 
 export FIU_ENABLE="$ENABLE"
 export FIU_CTRL_FIFO="$FIFO_PREFIX"
-export LD_PRELOAD="$PLIBPATH/fiu_run_preload.so:$PRELOAD_LIBS"
+export LD_PRELOAD="$PLIBPATH/fiu_run_preload.so $PRELOAD_LIBS"
 
 if [ $DRY_RUN -eq 1 ] ; then
 	echo "FIU_ENABLE=\"$ENABLE\"" \\
 	echo "FIU_CTRL_FIFO=\"$FIFO_PREFIX\"" \\
-	echo "LD_PRELOAD=\"$PLIBPATH/fiu_run_preload.so:$PRELOAD_LIBS\"" \\
+	echo "LD_PRELOAD=\"$PLIBPATH/fiu_run_preload.so $PRELOAD_LIBS\"" \\
 	echo "$@"
 else
 	exec "$@"
