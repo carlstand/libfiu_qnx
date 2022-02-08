@@ -1,6 +1,7 @@
+CC=/root/qnx710/host/linux/x86_64/usr/bin/qcc
 
 CFLAGS += -std=c99 -Wall -O3
-ALL_CFLAGS = -D_XOPEN_SOURCE=600 -fPIC -DFIU_ENABLE=1 \
+ALL_CFLAGS = -D_XOPEN_SOURCE=600 -D_QNX_SOURCE -fPIC -DFIU_ENABLE=1 \
 		-D_LARGEFILE64_SOURCE=1 -I. -I../../libfiu/ \
 		$(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
@@ -94,7 +95,7 @@ build-libcsoname:
 
 build-env.h: build-env.h.in build-libcsoname
 	@echo "  GEN $@"
-	$(Q) sed "s+@@LIBC_SONAME@@+`cat build-libcsoname`+g" build-env.h.in \
+	$(Q) sed "s+@@LIBC_SONAME@@+`cat libc.so.5`+g" build-env.h.in \
 		> build-env.h
 
 
@@ -102,7 +103,7 @@ fiu_posix_preload.so: build-flags build-env.h build-needlibdl \
 		$(OBJS) ../../libfiu/hash.c
 	$(NICE_CC) $(ALL_CFLAGS) -shared -fPIC $(OBJS) ../../libfiu/hash.c \
 		-L../../libfiu/ \
-		-lfiu `cat build-needlibdl` \
+		-lfiu \
 		-o fiu_posix_preload.so
 
 

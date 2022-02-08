@@ -235,7 +235,7 @@ int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, \
 	valid errnos: EBADF EINTR EINVAL ENOMEM
 
 int pselect(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, \
-		const struct timespec *timeout, const sigset_t *sigmask);
+		struct timespec *timeout, const sigset_t *sigmask);
 	on error: -1
 	valid errnos: EBADF EINTR EINVAL ENOMEM
 

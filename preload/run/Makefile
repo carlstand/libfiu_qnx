@@ -1,6 +1,7 @@
+CC=/root/qnx710/host/linux/x86_64/usr/bin/qcc
 
 CFLAGS += -std=c99 -Wall -O3
-ALL_CFLAGS = -D_XOPEN_SOURCE=600 -fPIC -DFIU_ENABLE=1 \
+ALL_CFLAGS = -D_XOPEN_SOURCE=600 -D_QNX_SOURCE -fPIC -DFIU_ENABLE=1 \
 		-I. -I../../libfiu/ \
 		$(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
@@ -61,7 +62,7 @@ build-needlibdl:
 fiu_run_preload.so: build-flags build-needlibdl $(OBJS)
 	$(NICE_CC) $(ALL_CFLAGS) -shared -fPIC $(OBJS) \
 		-L../../libfiu/ \
-		-lfiu `cat build-needlibdl` \
+		-lfiu \
 		-o fiu_run_preload.so
 
 

@@ -32,7 +32,7 @@ int mprotect(void *addr, size_t len, int prot);
 	on error: -1
 	valid errnos: EACCES EINVAL ENOMEM
 v: #else
-int mprotect(const void *addr, size_t len, int prot);
+int mprotect(void *addr, size_t len, int prot);
 	on error: -1
 	valid errnos: EACCES EINVAL ENOMEM
 v: #endif
