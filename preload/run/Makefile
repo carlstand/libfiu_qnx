@@ -17,7 +17,7 @@ endif
 PREFIX=/usr/local
 
 # location of preload libraries
-PLIBPATH=$(PREFIX)/lib
+PLIBPATH=/opt/qcc/libfiu/lib
 
 # install utility, we assume it's GNU/BSD compatible
 INSTALL=install

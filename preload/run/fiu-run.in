@@ -5,7 +5,7 @@
 # environment variables used to communicate with it.
 
 # default remote control over named pipes prefix
-FIFO_PREFIX="${TMPDIR:-/tmp}/fiu-ctrl"
+FIFO_PREFIX="/data/fiu-ctrl"
 
 # default library path to look for preloader libraries
 PLIBPATH="@@PLIBPATH@@"
@@ -151,7 +151,7 @@ shift $(( $OPTIND - 1 ))
 
 # Allow user to give -l and -x in any order.
 if [ $USE_POSIX_PRELOAD -eq 1 ] ; then
-	PRELOAD_LIBS="$PRELOAD_LIBS:$PLIBPATH/fiu_posix_preload.so"
+	PRELOAD_LIBS="$PLIBPATH/fiu_posix_preload.so"
 fi
 
 #
