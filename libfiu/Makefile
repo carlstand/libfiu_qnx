@@ -1,7 +1,7 @@
 CC=/root/qnx710/host/linux/x86_64/usr/bin/qcc
 
 CFLAGS += -std=c99 -pedantic -Wall
-ALL_CFLAGS = -D_XOPEN_SOURCE=600 -D_QNX_SOURCE -DDUMMY_BACKTRACE -fPIC -DFIU_ENABLE=1 \
+ALL_CFLAGS = -Vgcc_ntox86_64 -D_POSIX_C_SOURCE=200809L -D_QNX_SOURCE -DDUMMY_BACKTRACE -fPIC -DFIU_ENABLE=1 \
 		$(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # Optimization CFLAGS, only used when doing a non-debug build.
